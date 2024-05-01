@@ -10,10 +10,10 @@ class TaskController {
           .status(400)
           .json({ code: 400, message: error.details[0].message });
 
-      const { title, description, dueDate } = value;
+      const { title, task_dec, dueDate } = value;
 
       const query = `INSERT INTO tasks (title, task_desc, due_date) 
-        VALUES ('${title}', '${description}', '${dueDate}')`;
+        VALUES ('${title}', '${task_dec}', '${dueDate}')`;
 
       const result = await dbOpreation(query);
 
@@ -179,7 +179,7 @@ class TaskController {
 
         const result = await dbOpreation(query);
 
-        if(!result.length) return res.status(400).json({
+        if(!result.length) return res.status(200).json({
             code : 404,
             message : "No task found!"
         });
