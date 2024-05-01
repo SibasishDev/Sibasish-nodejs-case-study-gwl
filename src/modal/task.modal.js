@@ -4,7 +4,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.query(query, (err, result) => {
                 if(err) reject(err);
-                resolveq(result);
+                resolve(result);
             })
         })
     }

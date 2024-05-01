@@ -10,13 +10,10 @@ class ApiRouter {
     init(){
 
         this.router.post("/create-task", taskController.createTask);
-        
-        this.router.use("*", (req, res) => {
-            return res.status(404).json({
-                code : 404,
-                message : "Not found!"
-            })
-        });
+        this.router.get("/get-task/:taskId", taskController.getTaskById);
+        this.router.put("/update-task/:taskId", taskController.updateTask);
+        this.router.delete("/delete-task/:taskId", taskController.deleteTask);
+        this.router.get("/get-all-tasks", taskController.getAllTasks);
     }
 
     getRouter(){

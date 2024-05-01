@@ -5,7 +5,6 @@ require("dotenv").config();
 
 const app = express();
 const apiRouter = require("./routes/api.router");
-const db = require("./config/db.connection");
 
 class App {
     constructor(){
@@ -16,15 +15,23 @@ class App {
     init(){
         this.addMiddlewarRoutes(this.app);
         this.listenToPort(this.app, this.port);
-        this.dbConnection();
     }
 
     addMiddlewarRoutes(app){
-        app.use(express.json(), express.urlencoded({extended : false}));
+        app.use(express.json(),express.urlencoded({extended : false}));
         app.use(cors());
         app.use(helmet());
 
+        require("./config/db.connection");
+
         app.use("/api/v1", apiRouter.getRouter());
+
+        app.use("*", (req, res) => {
+            return res.status(404).json({
+                code : 404,
+                message : "Not found!"
+            })
+        });
 
         app.use((err, req, res, next) => {
             return res.status(err.status || 500).json({
@@ -32,15 +39,6 @@ class App {
                 message : err.message || "Internal Server Error!"
             })
         })
-    }
-
-    async dbConnection(){
-            try{
-                await db.getConnection();
-    
-            }catch(e){
-                console.log("Some error occurred in database connection: ", e);
-            }
     }
 
     listenToPort(app, port){
